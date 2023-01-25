@@ -1,0 +1,59 @@
+{
+  "users": [
+    {
+      "id": "BjB_fKDa",
+      "firstName": "Jemiii",
+      "lastName": "Boooo",
+      "email": "jhoshua@yopmail.com",
+      "birthDate": "1999-01-01",
+      "location": [
+        120.3123,
+        -7.203123
+      ]
+    },
+    {
+      "id": "Yfkr_73w",
+      "firstName": "Jhos",
+      "lastName": "Bush",
+      "email": "jhos@gmail.com",
+      "birthDate": "1999-12-01",
+      "location": [
+        110.3123,
+        -7.203123
+      ]
+    },
+    {
+      "id": "YOM445BT",
+      "firstName": "Jhes",
+      "lastName": "Bish",
+      "email": "jhos@yopmail.com",
+      "birthDate": "1989-12-01",
+      "location": [
+        110.3123,
+        -7.203123
+      ]
+    },
+    {
+      "id": "RDTSb6qp",
+      "firsName": "Jhos",
+      "lastName": "Bush",
+      "email": "jhos@yopmail.com",
+      "birthDate": "1999-01-25",
+      "location": [
+        10.3123,
+        1.203123
+      ]
+    },
+    {
+      "id": "1Cg5pkok",
+      "firstName": "Geeeemes",
+      "lastName": "Bush",
+      "email": "jhos@yopmail.com",
+      "birthDate": "1999-01-26",
+      "location": [
+        110.3123,
+        -7.203123
+      ]
+    }
+  ]
+}
