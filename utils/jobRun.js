@@ -43,7 +43,7 @@ async function sendMail(user, port) {
     message: `Hey, ${user.firstName + ' ' + user.lastName} Happy birthday`
   }
 
-  if (localHour === 10 && localMinutes === 30) {
+  if (localHour === 9 && localMinutes === 30) {
     const response = await fetch(`https://email-service.digitalenvision.com.au/send-email`, {
       method: 'POST',
       body: JSON.stringify(bodyResponse),
