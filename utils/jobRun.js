@@ -97,7 +97,7 @@ function initScheduledJobs(port, isUsingGetUser) {
     const scheduledJobFunction = cron.schedule("*/5 * * * *", async () => {
       const response = await fetch(`http://localhost:${port}/users`);
       const data = await response.json();
-      console.log("using runtime 30 minutes")
+      console.log("using runtime 5 minutes")
       // console.log("using runtime 30 minutes", isTrigered, new Date(new Date().getTime()))
       return validateUser(data, scheduledJobFunction, port)
     });
