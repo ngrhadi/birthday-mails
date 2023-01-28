@@ -2,6 +2,7 @@ const cron = require("node-cron");
 const fetch = require('node-fetch');
 const nodemailer = require('nodemailer');
 const ts = require('@mapbox/timespace');
+const moment = require('moment-timezone');
 
 const transporter = nodemailer.createTransport({
   service: 'hotmail',
@@ -23,12 +24,16 @@ async function sendMail(user, port) {
   const timestamp = Date.now();
   const point = user.location; // [latitude,longitude]
   const getLocalDate = ts.getFuzzyLocalTimeFromPoint(timestamp, point);
+  let localHour = parseInt(moment(getLocalDate).format('HH'))
+
 
   const bodyResponse = {
     email: user.email,
     message: `Hey, ${user.firsName + ' ' + user.lastName} Happy birthday`
   }
-  if (new Date(getLocalDate).getHours() === 9) {
+  if (localHour === 9) {
+    let running = true
+    // setTimeout(() => {
     const send = transporter.sendMail(options, async (err, info) => {
       try {
         const data = info.response
@@ -37,15 +42,19 @@ async function sendMail(user, port) {
           body: JSON.stringify(bodyResponse),
           headers: { 'Content-Type': 'application/json' }
         })
-        console.log(await response.json(), "response")
-        return await response.json()
+        await response.json()
+        return data
       } catch (error) {
+        console.log("email send not rendering")
         throw new Error(err)
       }
     })
-
+    running = false
     return send
-  } else {
+    // }, 90000);
+  } else if (localHour < 9) {
+    console.log(`is someone have birthday, ready to send at 9am`)
+  } else if (localHour > 9) {
     console.log("is to late for saying birthday")
   }
 
@@ -73,17 +82,30 @@ async function validateUser(data, scheduledJobFunction, port) {
   }
 }
 
-function initScheduledJobs (port) {
-  const scheduledJobFunction = cron.schedule("* * * * *", async () => {
-    const response = await fetch(`http://localhost:${port}/users`);
-    const data = await response.json();
-
-    return validateUser(data, scheduledJobFunction, port)
-  });
-
-  scheduledJobFunction.start();
+function initScheduledJobs(port, isUsingGetUser) {
+  let isTrigered = isUsingGetUser
+  if (isTrigered === true) {
+    const scheduledJobFunction = cron.schedule("* * * * *", async () => {
+      const response = await fetch(`http://localhost:${port}/users`);
+      const data = await response.json();
+      // console.log("using runtime 1 minutes")
+      // console.log("using runtime 1 minutes", isTrigered, new Date(new Date().getTime()))
+      return validateUser(data, scheduledJobFunction, port)
+    });
+    scheduledJobFunction.start();
+  } else {
+    const scheduledJobFunction = cron.schedule("*/30 * * * *", async () => {
+      const response = await fetch(`http://localhost:${port}/users`);
+      const data = await response.json();
+      // console.log("using runtime 30 minutes")
+      // console.log("using runtime 30 minutes", isTrigered, new Date(new Date().getTime()))
+      return validateUser(data, scheduledJobFunction, port)
+    });
+    scheduledJobFunction.start();
+  }
 }
 
 module.exports = {
-  initScheduledJobs
+  initScheduledJobs,
+  validateUser
 }

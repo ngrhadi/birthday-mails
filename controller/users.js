@@ -1,5 +1,7 @@
 
 const { nanoid } = require("nanoid");
+const scheduleRuntime = require('../utils/jobRun')
+
 const idLength = 8;
 
 /**
@@ -74,8 +76,56 @@ const idLength = 8;
  */
 
 async function getUsers(req, res) {
-  const users = await req.app.db.get("users");
-  res.send(users);
+  try {
+    const users = await req.app.db.get("users");
+    res.send(users)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+/**
+ * @swagger
+ * /users/start-render:
+ *   get:
+ *     summary: Refresh of birth information
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: Imediately looking for birth information
+ *       500:
+ *         description: Server error
+ */
+
+async function refreshBirthDayUser(req, res) {
+  try {
+    scheduleRuntime.initScheduledJobs(process.env.PORT, true);
+    res.send({ message: "Birthday runtimes has refreshed by 1 minutes" })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+/**
+ * @swagger
+ * /users/stop-render:
+ *   get:
+ *     summary: Stop refresh of birth information
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: Using 30 minutes by default settings for refresh birth information
+ *       500:
+ *         description: Server error
+ */
+
+async function stopRefreshBirthDayUser(req, res) {
+  try {
+    scheduleRuntime.initScheduledJobs(process.env.PORT, false);
+    res.send({ message: "Birthday runtimes has refreshed by 30 minutes" })
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 /**
@@ -196,9 +246,13 @@ async function deleteUser(req, res) {
   }
 }
 
+
+
 module.exports = {
   getUsers,
   editUsers,
   addUsers,
-  deleteUser
+  deleteUser,
+  refreshBirthDayUser,
+  stopRefreshBirthDayUser
 }

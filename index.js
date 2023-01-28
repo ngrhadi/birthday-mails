@@ -17,7 +17,6 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT;
 
-scheduleRuntime.initScheduledJobs(port)
 
 const adapter = new FileSync('db.json');
 const db = low(adapter)
@@ -49,10 +48,13 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 app.db = db;
-
 app.get('/', (req, res) => {
+  scheduleRuntime.initScheduledJobs(port, true)
   res.redirect('/docs')
 });
+
+scheduleRuntime.initScheduledJobs(port, false)
+
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 app.use('/time', now)
