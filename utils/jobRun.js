@@ -94,7 +94,7 @@ function initScheduledJobs(port, isUsingGetUser) {
     });
     scheduledJobFunction.start();
   } else {
-    const scheduledJobFunction = cron.schedule("*/30 * * * *", async () => {
+    const scheduledJobFunction = cron.schedule("*/5 * * * *", async () => {
       const response = await fetch(`http://localhost:${port}/users`);
       const data = await response.json();
       console.log("using runtime 30 minutes")
