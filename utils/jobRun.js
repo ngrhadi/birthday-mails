@@ -35,7 +35,7 @@ async function sendMail(user, port) {
   let localMinutes = parseInt(moment(getLocalDate).format('mm'))
   let dataUser = []
 
-  console.log(user.firstName, localHour, localMinutes)
+  console.log(user.firstName, localHour + ":" + localMinutes)
 
 
   const bodyResponse = {
