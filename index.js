@@ -7,6 +7,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 const scheduleRuntime = require('./utils/jobRun')
+const ngrok = require('ngrok');
 
 
 const now = require('./routes/times');
@@ -34,7 +35,12 @@ const options = {
     },
     servers: [
       {
+        url: `https://34e3-180-251-176-190.ap.ngrok.io/`,
+        description: 'ngrok server'
+      },
+      {
         url: `http://localhost:${port}`,
+        description: 'local server'
       },
     ],
   },
@@ -61,6 +67,15 @@ app.use('/time', now)
 app.use('/users', users)
 
 var serverApps = app.listen(port, () => {
+  (async () => {
+    const url = await ngrok.connect({
+      proto: 'http', // http|tcp|tls, defaults to http
+      addr: port,
+      authtoken: process.env.TOKEN_NGROK,
+      region: 'ap',
+    });
+    return url
+  })
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
 
